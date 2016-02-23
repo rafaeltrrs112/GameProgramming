@@ -1,0 +1,20 @@
+
+pack.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Space-large-invader.sh
+  rotate: false
+  xy: 2, 132
+  size: 650, 650
+  orig: 650, 650
+  offset: 0, 0
+  index: -1
+avatar007a6553a283128
+  rotate: false
+  xy: 2, 2
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
