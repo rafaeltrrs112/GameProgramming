@@ -1,14 +1,12 @@
 package gdx.scala.demo
 
+import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.{ApplicationAdapter, Gdx}
 import com.uwsoft.editor.renderer.SceneLoader
 import com.uwsoft.editor.renderer.utils.ItemWrapper
-
 import gdx.scala.demo.character.Player
-import gdx.scala.demo.components._
-import gdx.scala.demo.system.{EnemyOffenseSystem, BulletSystem, CollisionSystem, EnemyMovementSystem}
 
 object Window {
   val Width: Float = 32
@@ -55,6 +53,8 @@ class SpaceInvaders extends ApplicationAdapter {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
     sceneLoader.getEngine.update(Gdx.graphics.getDeltaTime)
+    val testEntity = Entity()
+    sceneLoader.getEngine.addEntity(testEntity)
   }
 
 

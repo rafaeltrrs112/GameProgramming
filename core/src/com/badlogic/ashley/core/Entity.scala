@@ -26,6 +26,10 @@ import com.badlogic.gdx.utils.Bits
   *
   * @author Stefan Bachmann
   */
+
+object Entity {
+  def apply() : Entity = new Entity()
+}
 class Entity {
   /** A flag that can be used to bit mask this entity. Up to the user to manage. */
   var flags: Int = 0
@@ -71,6 +75,23 @@ class Entity {
       }
     }
     return this
+  }
+
+  def +=(component: Component): Entity = {
+    if (addInternal(component)) {
+      if (componentOperationHandler != null) {
+        componentOperationHandler.add(this)
+      }
+      else {
+        notifyComponentAdded
+      }
+    }
+    return this
+  }
+
+  def ++=(components: Component*): Entity = {
+    components.foreach(add)
+    this
   }
 
   /**
@@ -188,7 +209,7 @@ class Entity {
       componentBits.clear(componentTypeIndex)
       return true
     }
-    return false
+    false
   }
 
   private[core] def notifyComponentAdded {
@@ -205,8 +226,5 @@ class Entity {
   }
 
   def >>[T <: Component] (compClass : Class[T]) = ComponentMapper.getFor(compClass).get(this)
-
-  def >>[T <: Component] (compClass : Class[T]) = ComponentMapper.getFor(compClass).get(this)
-
 
 }

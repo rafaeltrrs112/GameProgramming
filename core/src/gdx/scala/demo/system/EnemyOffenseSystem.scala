@@ -57,7 +57,7 @@ class EnemyOffenseSystem(engine: Engine, player: Player) extends IteratingSystem
          */
         chosenBullet match {
           case Some(_) => {
-            val notInFlight = !Retriever.EnemyBulletMapper.get(chosenBullet.get).inFlight
+            val notInFlight = !(chosenBullet.get >> classOf[EnemyBullet]).inFlight
             if (notInFlight) triggerBullet(randomEnemy, chosenBullet.get)
           }
           case None =>
@@ -200,4 +200,7 @@ object EnemyBulletUpdater {
     bullet.triggered = false
   }
 
+}
+
+object Main extends App {
 }

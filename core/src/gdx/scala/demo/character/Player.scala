@@ -37,7 +37,7 @@ class Player(world: World, var trigger: Option[Trigger] = None) extends IScript 
 
   override def act(delta: Float): Unit = {
     nextPosition(delta) match {
-      case Some(position) =>  {
+      case Some(position) => {
         transformComponent.x = position
         val component = player >> classOf[DimensionsComponent]
         println(component.height)
@@ -56,14 +56,14 @@ class Player(world: World, var trigger: Option[Trigger] = None) extends IScript 
 
   }
 
-  def atBorder(nextPosit : Float) : Boolean = {
+  def atBorder(nextPosit: Float): Boolean = {
     nextPosit <= 0 || nextPosit >= Window.Width - dimensionsComponent.width
   }
 
-  def nextPosition(delta : Float) : Option[Float] = {
-    if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+  def nextPosition(delta: Float): Option[Float] = {
+    if (Gdx.input.isKeyPressed(Input.Keys.A)) {
       Some(transformComponent.x - (speed.x * delta))
-    } else if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+    } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
       Some(transformComponent.x + speed.x * delta)
     } else {
       None
