@@ -34,7 +34,7 @@ class AiSteeringState extends ApplicationAdapter {
 
   val TIME_TO_TARGET: Float = 0.01f
 
-  val ARRIVAL_TOLERANCE: Float = 1f
+  val ARRIVAL_TOLERANCE: Float = 1.3f
 
   val DECELERATION_RADIUS: Float = 10
 

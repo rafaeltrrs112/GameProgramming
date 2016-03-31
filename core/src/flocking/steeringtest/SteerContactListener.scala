@@ -18,20 +18,12 @@ class SteerContactListener extends ContactListener {
     val dataA = Option(contact.getFixtureA.getBody.getUserData)
     val dataB = Option(contact.getFixtureB.getBody.getUserData)
 
-    dataA match {
-      case Some(aData) => aData match {
-        case FlagCharacterData(true) => contact.setEnabled(false)
-        case _ => ()
-      }
-      case _ => ()
-    }
+    val userDatas = (dataA, dataB)
 
-    dataB match {
-      case Some(aData) => aData match {
-        case FlagCharacterData(true) => contact.setEnabled(false)
-        case _ => ()
-      }
-      case _ => ()
+
+    userDatas match {
+      case (Some(FlagCharacterData(true)), Some(FlagCharacterData(true))) => contact.setEnabled(false)
+      case _ => contact.setEnabled(true)
     }
 
     println("Contact detected")

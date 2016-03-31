@@ -112,6 +112,7 @@ class B2DSteeringEntity(val body: Body, val boundingRadius: Float) extends Steer
 
 object SteeringUtils {
   val PPM = 50
+  val FIELD_OF_VIEW = 120
 
   def vectorToAngle(vector: Vector2) = Math.atan2(vector.x * -1d, vector.y).toFloat
 
@@ -173,8 +174,6 @@ object SteeringUtils {
     camera.position.set(position)
     camera.update()
   }
-
-  val FIELD_OF_VIEW = 120
 
   def makeCone(world: World): Body = {
     val bodyDef = new BodyDef()
