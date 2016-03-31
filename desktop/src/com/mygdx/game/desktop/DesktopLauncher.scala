@@ -1,8 +1,7 @@
 package com.mygdx.game.desktop
 
 import com.badlogic.gdx.backends.lwjgl.{LwjglApplication, LwjglApplicationConfiguration}
-import flocking.FlockGuardGame
-import flocking.steeringtest.AiSteeringState
+import flocking.steeringtest.{AiSteeringState, FlockGuardGame}
 import gdx.scala.demo.SpaceInvaders
 
 

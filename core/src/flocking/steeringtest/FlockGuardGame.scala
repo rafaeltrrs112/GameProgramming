@@ -1,9 +1,8 @@
-package flocking
+package flocking.steeringtest
 
-import com.badlogic.ashley.core.{Entity, PooledEngine}
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.{ApplicationAdapter, Gdx}
 import com.badlogic.gdx.graphics.{GL20, OrthographicCamera}
+import com.badlogic.gdx.{ApplicationAdapter, Gdx}
 import flocking.character.Ship
 
 /**

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.LongArray
 import com.uwsoft.editor.renderer.scripts.IScript
-import flocking.FlockGuardGame
+import flocking.steeringtest.FlockGuardGame
 
 /**
   * Created by rotor on 3/28/2016.

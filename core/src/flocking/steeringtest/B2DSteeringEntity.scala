@@ -16,7 +16,7 @@ class B2DSteeringEntity(val body: Body, val boundingRadius: Float) extends Steer
 
   val location = Box2dLocation()
 
-  val fullLimiter = new FullLimiter(1280f, 720f, 5, 30)
+  val fullLimiter = new FullLimiter(8000f, 500f, 5, 30)
 
   private var _behavior: SteeringBehavior[Vector2] = null
 
