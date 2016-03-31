@@ -4,8 +4,8 @@ import com.badlogic.gdx.{ApplicationAdapter, Gdx, Input}
 import com.badlogic.gdx.ai.steer.behaviors.Arrive
 import com.badlogic.gdx.graphics.g2d.{Batch, SpriteBatch}
 import com.badlogic.gdx.graphics.{GL20, OrthographicCamera}
-import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.{Body, Box2DDebugRenderer, World}
+import com.badlogic.gdx.math.{MathUtils, Vector2}
+import com.badlogic.gdx.physics.box2d._
 
 /**
   * Created by rotor on 3/29/2016.
@@ -26,6 +26,9 @@ class AiSteeringState extends ApplicationAdapter {
   var targetBody: Body = null
   var target: B2DSteeringEntity = null
 
+  var coneBody : Body = null
+
+
   override def create(): Unit = {
     init()
     createBox(world, -200, 200, 60, 20, isStatic = true, canRotate = false)
@@ -33,7 +36,9 @@ class AiSteeringState extends ApplicationAdapter {
     createBox(world, -200, -200, 60, 20, isStatic = true, canRotate = false)
     createBox(world, 140, -2000, 60, 20, isStatic = true, canRotate = false)
 
+    world.setContactListener(new SteerContactListener)
   }
+
 
   def init(): Unit = {
     world = new World(new Vector2(0, 0), false)
@@ -45,14 +50,19 @@ class AiSteeringState extends ApplicationAdapter {
     entity = new B2DSteeringEntity(entityBody, 30)
 
     targetBody = SteeringUtils.createCircle(world, 0, 0, 10, isStatic = false, canRotate = true)
+
+    coneBody = SteeringUtils.makeCone(world)
+
     target = new B2DSteeringEntity(targetBody, 30)
 
     val arriveSB: Arrive[Vector2] = new Arrive[Vector2](entity, target)
       .setTimeToTarget(0.01f)
-      .setArrivalTolerance(2f)
+      .setArrivalTolerance(1f)
       .setDecelerationRadius(10)
 
     entity.behavior = arriveSB
+
+    SteeringUtils.linkBodies(world, entityBody, coneBody)
   }
 
   override def render(): Unit = {
@@ -88,7 +98,6 @@ class AiSteeringState extends ApplicationAdapter {
 
 
     if (x != 0) {
-      println("Not 0")
       val vel = target.body.getLinearVelocity
       target.body.setLinearVelocity(x * 10, vel.y)
     }
@@ -99,10 +108,18 @@ class AiSteeringState extends ApplicationAdapter {
       target.body.setLinearVelocity(vel.x, y * 10)
     }
 
+
     entity.update(delta)
 
     SteeringUtils.lerpToTarget(camera, target.getPosition.scl(50))
     batch.setProjectionMatrix(camera.combined)
+
+
+    coneBody.setUserData(FlagCharacterData(false))
+
+    entityBody.setTransform(entityBody.getPosition, MathUtils.degreesToRadians * entity.getLinearVelocity.angle)
+    coneBody.setTransform(entityBody.getPosition, MathUtils.degreesToRadians * (entity.getLinearVelocity.angle - 90))
+    targetBody.setTransform(targetBody.getPosition, MathUtils.degreesToRadians * targetBody.getLinearVelocity.angle)
   }
 
   def createBox(world: World, x: Float, y: Float,
@@ -110,3 +127,6 @@ class AiSteeringState extends ApplicationAdapter {
                 isStatic: Boolean, canRotate: Boolean) = SteeringUtils.createBox(world, x, y, w, h, isStatic, canRotate)
 
 }
+
+case class FlagCharacterData(isCharacter: Boolean)
+

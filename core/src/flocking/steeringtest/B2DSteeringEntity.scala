@@ -4,8 +4,9 @@ import com.badlogic.gdx.ai.steer.limiters.FullLimiter
 import com.badlogic.gdx.ai.steer.{Steerable, SteeringAcceleration, SteeringBehavior}
 import com.badlogic.gdx.ai.utils.Location
 import com.badlogic.gdx.graphics.Camera
-import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.{MathUtils, Vector2}
 import com.badlogic.gdx.physics.box2d._
+import com.badlogic.gdx.physics.box2d.joints.{RevoluteJointDef, WeldJointDef}
 
 /**
   * Created by rotor on 3/29/2016.
@@ -15,7 +16,7 @@ class B2DSteeringEntity(val body: Body, val boundingRadius: Float) extends Steer
 
   val location = Box2dLocation()
 
-  val fullLimiter = new FullLimiter(500f, 500f, 5, 30)
+  val fullLimiter = new FullLimiter(1280f, 720f, 5, 30)
 
   private var _behavior: SteeringBehavior[Vector2] = null
 
@@ -24,7 +25,6 @@ class B2DSteeringEntity(val body: Body, val boundingRadius: Float) extends Steer
 
   def update(delta: Float): Unit = {
     val behaviorExists = Option(_behavior)
-    println(behaviorExists)
     behaviorExists match {
       case None => throw new RuntimeException("Behavior not set")
       case Some(currentBehavior) =>
@@ -38,12 +38,12 @@ class B2DSteeringEntity(val body: Body, val boundingRadius: Float) extends Steer
 
     steerOutput.linear.isZero match {
       case false => anyAccels = handleNonZero(delta)
-      case _ => ()
+      case _ =>
     }
 
     anyAccels match {
       case true => handleAcceleration(delta)
-      case _ => ()
+      case _ =>
     }
 
   }
@@ -172,6 +172,45 @@ object SteeringUtils {
     position.y = camera.position.y + (target.x - camera.position.y) * .1f
     camera.position.set(position)
     camera.update()
+  }
+
+  def makeCone(world: World): Body = {
+    val bodyDef = new BodyDef()
+    bodyDef.fixedRotation = true
+    bodyDef.linearDamping = 10f
+    bodyDef.`type` = BodyDef.BodyType.DynamicBody
+
+
+    val triangle = new PolygonShape()
+
+    val vertices = new Array[Vector2](3)
+
+    vertices(0) = new Vector2(0f, 10 / 50)
+    val x = (Math.tan((120 / 2) * MathUtils.degreesToRadians) * 2).toFloat
+    vertices(1) = new Vector2(x, 10 / 50 + 2)
+    vertices(2) = new Vector2(-x, 10 / 50 + 2)
+
+    triangle.set(vertices)
+
+    val fixtureDef = new FixtureDef()
+
+
+    fixtureDef.shape = triangle
+    fixtureDef.isSensor = true
+
+    val body = world.createBody(bodyDef).createFixture(fixtureDef).getBody
+    body
+  }
+
+  def linkBodies(world: World, bodyA: Body, bodyB: Body): Unit = {
+    val weldJointDef = new WeldJointDef()
+    weldJointDef.bodyA = bodyA
+    weldJointDef.bodyB = bodyB
+
+    weldJointDef.collideConnected = false
+    weldJointDef.localAnchorA.set(0, 0)
+
+    world.createJoint(weldJointDef)
   }
 }
 
