@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d._
 /**
   * Created by rotor on 3/29/2016.
   */
-class AiSteeringState extends ApplicationAdapter {
+class AISteeringGame extends ApplicationAdapter {
 
   val PPM = 50
   var renderer: Box2DDebugRenderer = null
@@ -140,5 +140,5 @@ class AiSteeringState extends ApplicationAdapter {
 
 }
 
-case class FlagCharacterData(isCharacter: Boolean)
+
 

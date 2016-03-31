@@ -3,10 +3,8 @@ package flocking.steeringtest
 import com.badlogic.gdx.ai.steer.limiters.FullLimiter
 import com.badlogic.gdx.ai.steer.{Steerable, SteeringAcceleration, SteeringBehavior}
 import com.badlogic.gdx.ai.utils.Location
-import com.badlogic.gdx.graphics.Camera
-import com.badlogic.gdx.math.{MathUtils, Vector2}
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d._
-import com.badlogic.gdx.physics.box2d.joints.{RevoluteJointDef, WeldJointDef}
 
 /**
   * Created by rotor on 3/29/2016.
@@ -112,24 +110,4 @@ class B2DSteeringEntity(val body: Body, val boundingRadius: Float) extends Steer
 
 
 
-class Box2dLocation extends Location[Vector2] {
 
-  var position = new Vector2()
-  var orientation: Float = 0f
-
-  override def getPosition: Vector2 = position
-
-  override def newLocation(): Location[Vector2] = new Box2dLocation()
-
-  override def angleToVector(outVector: Vector2, angle: Float): Vector2 = SteeringUtils.angleToVector(outVector, angle)
-
-  override def setOrientation(orientation: Float): Unit = this.orientation = orientation
-
-  override def vectorToAngle(vector: Vector2): Float = SteeringUtils.vectorToAngle(vector)
-
-  override def getOrientation: Float = orientation
-}
-
-object Box2dLocation {
-  def apply(): Box2dLocation = new Box2dLocation()
-}
