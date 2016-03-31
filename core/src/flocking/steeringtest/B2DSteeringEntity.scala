@@ -174,6 +174,8 @@ object SteeringUtils {
     camera.update()
   }
 
+  val FIELD_OF_VIEW = 120
+
   def makeCone(world: World): Body = {
     val bodyDef = new BodyDef()
     bodyDef.fixedRotation = true
@@ -185,10 +187,10 @@ object SteeringUtils {
 
     val vertices = new Array[Vector2](3)
 
-    vertices(0) = new Vector2(0f, 10 / 50)
-    val x = (Math.tan((120 / 2) * MathUtils.degreesToRadians) * 2).toFloat
-    vertices(1) = new Vector2(x, 10 / 50 + 2)
-    vertices(2) = new Vector2(-x, 10 / 50 + 2)
+    vertices(0) = new Vector2(0f, 10 / PPM)
+    val x = (Math.tan((FIELD_OF_VIEW / 2) * MathUtils.degreesToRadians) * 2).toFloat
+    vertices(1) = new Vector2(x, 10 / PPM + 2)
+    vertices(2) = new Vector2(-x, 10 / PPM + 2)
 
     triangle.set(vertices)
 
