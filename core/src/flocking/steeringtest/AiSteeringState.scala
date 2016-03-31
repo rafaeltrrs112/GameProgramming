@@ -26,8 +26,17 @@ class AiSteeringState extends ApplicationAdapter {
   var targetBody: Body = null
   var target: B2DSteeringEntity = null
 
-  var coneBody : Body = null
+  var coneBody: Body = null
 
+  val ANGLE_OFFSET = 90
+
+  val CIRCE_BODY_RADIUS: Float = 30f
+
+  val TIME_TO_TARGET: Float = 0.01f
+
+  val ARRIVAL_TOLERANCE: Float = 1f
+
+  val DECELERATION_RADIUS: Float = 10
 
   override def create(): Unit = {
     init()
@@ -39,26 +48,25 @@ class AiSteeringState extends ApplicationAdapter {
     world.setContactListener(new SteerContactListener)
   }
 
-
   def init(): Unit = {
     world = new World(new Vector2(0, 0), false)
     renderer = new Box2DDebugRenderer()
     batch = new SpriteBatch()
-    camera = new OrthographicCamera(1000, 1000)
+    camera = new OrthographicCamera(1280, 720)
 
     entityBody = SteeringUtils.createCircle(world, 0, 50, 10, isStatic = false, canRotate = true)
-    entity = new B2DSteeringEntity(entityBody, 30)
+    entity = new B2DSteeringEntity(entityBody, CIRCE_BODY_RADIUS)
 
     targetBody = SteeringUtils.createCircle(world, 0, 0, 10, isStatic = false, canRotate = true)
 
     coneBody = SteeringUtils.makeCone(world)
 
-    target = new B2DSteeringEntity(targetBody, 30)
+    target = new B2DSteeringEntity(targetBody, CIRCE_BODY_RADIUS)
 
     val arriveSB: Arrive[Vector2] = new Arrive[Vector2](entity, target)
-      .setTimeToTarget(0.01f)
-      .setArrivalTolerance(1f)
-      .setDecelerationRadius(10)
+      .setTimeToTarget(TIME_TO_TARGET)
+      .setArrivalTolerance(ARRIVAL_TOLERANCE)
+      .setDecelerationRadius(DECELERATION_RADIUS)
 
     entity.behavior = arriveSB
 
@@ -70,7 +78,7 @@ class AiSteeringState extends ApplicationAdapter {
     Gdx.gl.glClearColor(.25f, .25f, .25f, 1f)
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-    renderer.render(world, camera.combined.cpy().scl(50))
+    renderer.render(world, camera.combined.cpy().scl(PPM))
     update(Gdx.graphics.getDeltaTime)
   }
 
@@ -111,14 +119,18 @@ class AiSteeringState extends ApplicationAdapter {
 
     entity.update(delta)
 
-    SteeringUtils.lerpToTarget(camera, target.getPosition.scl(50))
+    SteeringUtils.lerpToTarget(camera, target.getPosition.scl(PPM))
     batch.setProjectionMatrix(camera.combined)
-
 
     coneBody.setUserData(FlagCharacterData(false))
 
+    transformBodys()
+  }
+
+
+  def transformBodys(): Unit = {
     entityBody.setTransform(entityBody.getPosition, MathUtils.degreesToRadians * entity.getLinearVelocity.angle)
-    coneBody.setTransform(entityBody.getPosition, MathUtils.degreesToRadians * (entity.getLinearVelocity.angle - 90))
+    coneBody.setTransform(entityBody.getPosition, MathUtils.degreesToRadians * (entity.getLinearVelocity.angle - ANGLE_OFFSET))
     targetBody.setTransform(targetBody.getPosition, MathUtils.degreesToRadians * targetBody.getLinearVelocity.angle)
   }
 
