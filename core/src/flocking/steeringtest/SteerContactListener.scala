@@ -22,11 +22,12 @@ class SteerContactListener extends ContactListener {
 
 
     userDatas match {
-      case (Some(FlagCharacterData(true)), Some(FlagCharacterData(true))) => contact.setEnabled(false)
+      case (Some(FlagCharacterData(true)), Some(FlagCharacterData(true))) =>
+        contact.setEnabled(false)
+        println("Collision detected!")
       case _ => contact.setEnabled(true)
     }
 
-    println("Contact detected")
   }
 
   override def preSolve(contact: Contact, oldManifold: Manifold): Unit = {
